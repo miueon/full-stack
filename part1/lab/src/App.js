@@ -1,20 +1,5 @@
 import { useState } from "react"
 
-const Hello = (props) => {
-  const bornYear = () => {
-    const yearNow = new Date().getFullYear()
-    return yearNow - props.age
-  }
-
-  return (
-    <div>
-      <p>
-        Fuck {props.name} {props.i} times
-      </p>
-      <p>So you were probably born in {bornYear()}</p>
-    </div>
-  )
-}
 
 const Display = ({ counter }) => {
   return (
@@ -28,27 +13,53 @@ const Button = ({ onClick, text }) => {
   )
 }
 
-const App = (props) => {
-  const name = 'jiajia'
-  // useState returns an array as result. 
-  const [counter, setCounter] = useState(0)
-  const plus = () => {
-    setCounter(counter + 1)
-    console.log('clicked')
+const History = (props) => {
+  if (props.allClicks.length === 0) {
+    return (
+      <div>
+        the app is used by pressing the buttons
+      </div>
+    )
   }
-  const setToZero = () => setCounter(0)
-  const minus = () => {
-    setCounter(counter - 1)
-  }
-  setTimeout(() => setCounter(counter + 1), 1000)
 
   return (
     <div>
-      <Hello name={name} i={counter} age={26} />
-      <Display counter={counter} />
-      <Button onClick={plus} text={'plus'} />
-      <Button onClick={setToZero} text={'setToZero'} />
-      <Button onClick={minus} text={'minus'} />
+      button press history: {props.allClicks.join(' ')}
+    </div>
+  )
+}
+
+const App = (props) => {
+  const [clicks, setClicks] = useState({
+    left: 0, right: 0
+  })
+  const [allClicks, setAll] = useState([])
+
+  const handleLeftClick = () => {
+    const newClicks = {
+      ...clicks,
+      left: clicks.left + 1
+    }
+    setAll(allClicks.concat('L'))
+    setClicks(newClicks)
+  }
+
+  const handleRightClick = () => {
+    const newClicks = {
+      ...clicks,
+      right: clicks.right + 1
+    }
+    setAll(allClicks.concat('R'))
+    setClicks(newClicks)
+  }
+
+  debugger
+
+  return (
+    <div>
+      <Button onClick={handleLeftClick} text={'Left'} />
+      <Button onClick={handleRightClick} text={'Right'} />
+      <History allClicks={allClicks}/>
     </div>
   )
 }
